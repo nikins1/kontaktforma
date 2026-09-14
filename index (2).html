@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kontaktforma</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, Arial, sans-serif;
+    background: #f4f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .card {
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 420px;
+  }
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #222;
+  }
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #4f7cff;
+  }
+  .error {
+    color: #d33;
+    font-size: 0.8rem;
+    min-height: 16px;
+    margin-bottom: 10px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #4f7cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  button:hover { background: #3a63e0; }
+  #success {
+    display: none;
+    background: #e6f7ec;
+    color: #1a7a3c;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Sazinies ar mums</h1>
+  <form id="contactForm" novalidate>
+    <label for="name">Vārds</label>
+    <input type="text" id="name" name="name">
+    <div class="error" id="nameError"></div>
+
+    <label for="email">E-pasts</label>
+    <input type="text" id="email" name="email">
+    <div class="error" id="emailError"></div>
+
+    <label for="message">Ziņa</label>
+    <textarea id="message" name="message" rows="4"></textarea>
+    <div class="error" id="messageError"></div>
+
+    <button type="submit">Nosūtīt</button>
+  </form>
+  <div id="success">✅ Ziņa nosūtīta veiksmīgi!</div>
+</div>
+
+<script>
+  const form = document.getElementById('contactForm');
+  const successBox = document.getElementById('success');
+
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  const messageInput = document.getElementById('message');
+
+  const nameError = document.getElementById('nameError');
+  const emailError = document.getElementById('emailError');
+  const messageError = document.getElementById('messageError');
+
+  function isValidEmail(value) {
+    // vienkārša e-pasta pārbaude: kaut kas@kaut kas.kaut kas
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(value);
+  }
+
+  function validate() {
+    let valid = true;
+
+    // Vārds
+    if (nameInput.value.trim().length < 2) {
+      nameError.textContent = 'Vārdam jābūt vismaz 2 rakstzīmes garam.';
+      valid = false;
+    } else {
+      nameError.textContent = '';
+    }
+
+    // E-pasts
+    if (!isValidEmail(emailInput.value.trim())) {
+      emailError.textContent = 'Lūdzu ievadi derīgu e-pasta adresi.';
+      valid = false;
+    } else {
+      emailError.textContent = '';
+    }
+
+    // Ziņa
+    if (messageInput.value.trim().length < 10) {
+      messageError.textContent = 'Ziņai jābūt vismaz 10 rakstzīmes garai.';
+      valid = false;
+    } else {
+      messageError.textContent = '';
+    }
+
+    return valid;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (validate()) {
+      successBox.style.display = 'block';
+      form.reset();
+      setTimeout(() => { successBox.style.display = 'none'; }, 3000);
+    } else {
+      successBox.style.display = 'none';
+    }
+  });
+
+  // Pārbauda lauku tūlīt pēc tam, kad lietotājs pamet lauku (blur)
+  [nameInput, emailInput, messageInput].forEach(input => {
+    input.addEventListener('blur', validate);
+  });
+</script>
+
+</body>
+</html>
